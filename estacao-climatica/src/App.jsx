@@ -1,22 +1,32 @@
 import React from "react"
+import EstacaoClimatica from "./EstacaoClimatica";
+import Loading from "./Loading";
 
 class App extends React.Component {
 
-  constructor(props){
-    super(props)
-    this.state = {
-      latitude: null,
-      longitude: null,
-      estacao: null,
-      data: null,
-      icone: null,
-      mensagemErro: null
-    }
+  state = {
+    latitude: null,
+    longitude: null,
+    estacao: null,
+    data: null,
+    icone: null,
+    mensagemErro: null
+  }
+
+  componentDidMount(){
+    this.obterLocalizacao()
+  }
+
+  componentDidUpdate(){
+
+  }
+
+  componentWillUnmount(){
+
   }
 
   obterEstacao = (data, latitude) => {
 
-    console.log(1);
     const anoAtual = data.getFullYear()
 
     const d1 = new Date(anoAtual, 5, 21)
@@ -34,7 +44,7 @@ class App extends React.Component {
       return estaNoSul ? "Primavera" : "Outono"
     }
 
-    if(data >= d3 || data < d1){
+    if(data >= d3 || data < d4){
       return estaNoSul ? "Verão" : "Inverno"
     }
 
@@ -60,7 +70,7 @@ class App extends React.Component {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           estacao: estacao,
-          data: data.toLocaleDateString(),
+          data: data.toLocaleDateString() + " " + data.toLocaleTimeString(),
           icone: icone,
         })
       },
@@ -77,36 +87,29 @@ class App extends React.Component {
       <div className="container mt-2">
         <div className="row justify-content-center">
           <div className="col-sm-12 col-md-8 col-xxl-6">
-            <div className="card">
-              <div className="card-body">
-                
-                <div 
-                  className="d-flex align-items-center rounded mb-2 p-5"
-                  style={{height: "10rem"}}>
-                    <i className={`fas fa-5x fa-${this.state.icone}`}></i>
-                    <p className="w-75 ms-3 text-center fs-1">
-                      {this.state.estacao}
+            <div className="d-flex align-items-center justify-content-center vh-100">
+              {
+                (!this.state.latitude && !this.state.mensagemErro) ?
+                  <Loading
+                    mensagem="Por favor, responda à solicitação de localização."
+                  />
+                :
+                  this.state.mensagemErro ?
+                    <p className="border rounded p-2 fs-1 text-center">
+                      É preciso permitir acesso à localização para que seja possível
+                      mostrar a sua estação climática.
                     </p>
-                </div>
-
-                <div>
-                  <p className="text-center">
-                    {this.state.latitude ? 
-                      `Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}.`
-                      :
-                      this.state.mensagemErro ?? 
-                      "Clique no botão para saber sua estação climática"
-                    }
-                  </p>
-                </div>
-
-                <button 
-                  onClick={this.obterLocalizacao}
-                  className="btn btn-outline-primary w-100 mt-2">
-                  Qual a minha estação?
-                </button>
-
-              </div>
+                  :
+                  <EstacaoClimatica
+                    icone={this.state.icone}
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+                    estacao={this.state.estacao}
+                    data={this.state.data}
+                    mensagemErro={this.state.mensagemErro}
+                    obterLocalizacao={this.obterLocalizacao}
+                  ></EstacaoClimatica>
+              }
             </div>
           </div>
         </div>
