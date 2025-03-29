@@ -1,11 +1,31 @@
-function App() {
+import { Component } from "react"
+import Busca from "./components/Busca"
 
-  return (
-    <div>
-      <h1>Exibir uma lista de...</h1>
-      <i className="pi pi-search"></i>
-    </div>
-  )
+class App extends Component {
+
+  onBuscaRealizada = (termo) => {
+    console.log(termo)
+  }
+
+  render(){
+    return (
+      <div
+        className="grid justify-content-center">
+  
+          <div className="col-12">
+            <h1>Exibir uma lista de...</h1>
+          </div>
+          <div className="col-12">
+            <Busca 
+              dica="Buscar imagens de..."
+              onBuscaRealizada={this.onBuscaRealizada}
+            />
+          </div>
+  
+      </div>
+    )
+  }
+  
 }
 
 export default App
