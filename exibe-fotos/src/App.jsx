@@ -1,10 +1,17 @@
 import { Component } from "react"
 import Busca from "./components/Busca"
-
+import env from 'react-dotenv'
+import { createClient } from 'pexels'
 class App extends Component {
+
+  pexelsClient = null
 
   onBuscaRealizada = (termo) => {
     console.log(termo)
+  }
+
+  componentDidMount = () => {
+    this.pexelsClient = createClient(env.PEXELS_KEY)
   }
 
   render(){
