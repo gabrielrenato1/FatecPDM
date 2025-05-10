@@ -23,7 +23,7 @@ class App extends Component {
     pexelsClient.get('/search', {
       params: {
         query: termo,
-        per_page: 5,
+        per_page: 15,
       }
     }).then(result => this.setState({photos: result.data.photos}))
   }
@@ -50,7 +50,9 @@ class App extends Component {
           </div>
 
           <div className="col-12">
-            <ListaImagens photos={this.state.photos}/>
+            <div className="grid">
+              <ListaImagens imgStyle={"col-12 md:col-6 lg:col-4 xl:col-3"} photos={this.state.photos}/>
+            </div>
           </div>
   
       </div>
