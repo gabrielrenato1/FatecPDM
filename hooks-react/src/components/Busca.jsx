@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { IconField} from 'primereact/iconfield'
 import { InputIcon } from 'primereact/inputicon'
+import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import axios from 'axios'
 import striptags from 'striptags'
@@ -33,9 +34,19 @@ const Busca = ({itens}) => {
             setResultados(data.query.search)
 
         }
-        
-        if(termoBusca){
+
+        if(termoBusca && resultados.length === 0){
             fazerBusca()
+        }else{
+            const timeoutID = setTimeout(() => {
+                if(termoBusca){
+                    fazerBusca()
+                }
+            }, 1000)
+        }
+
+        return () => {
+            clearTimeout(timeoutID)
         }
 
     }, [termoBusca])
@@ -56,6 +67,15 @@ const Busca = ({itens}) => {
                     <div key={resultado.pageid} className="my-2 border border-1 border-400">
                         <div className="border-bottom border border-1 border-400 p-2 text-center font-bold">
                             {resultado.title}
+                            <span>
+                                <Button 
+                                    icon="pi pi-send"
+                                    className="ml-3 p-button-rounded p-button-secondary"
+                                    onClick={() => {
+                                        window.open(`https://en.wikipedia.org?curid=${resultado.pageid}`)
+                                    }}    
+                                />
+                            </span>
                         </div>
                         <div className="p-2">
                             <p>{striptags(resultado.snippet)}</p>
